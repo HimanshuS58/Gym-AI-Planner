@@ -4,7 +4,7 @@ import { Button } from "../ui/Button"
 
 const Navbar = () => {
 
-    const user = true;
+    const user = false;
 
     return (
         <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
