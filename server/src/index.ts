@@ -9,18 +9,22 @@ import { planRouter } from './routes/plan';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
 // API Routes
-app.use('/api/profile', profileRouter);
-app.use('/api/plan', planRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/plan", planRouter);
+
+app.get("/", (req, res) => {
+    res.send("Backend is working");
+});
 
 
-app.listen(PORT, () => {
-    console.log(`Server running on port: ${PORT}`);
-})
+ app.listen(PORT, () => {
+     console.log(`Server running on port: ${PORT}`);
+ })
 
