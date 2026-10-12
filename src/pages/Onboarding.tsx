@@ -5,7 +5,8 @@ import { Select } from "../components/ui/Select";
 import { useState } from "react";
 import { Textarea } from "../components/ui/Textarea";
 import { Button } from "../components/ui/Button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
+import type { UserProfile } from "../types";
 
 
 const goalOptions = [
@@ -54,7 +55,7 @@ const splitOptions = [
 // main function
 const Onboarding = () => {
 
-  const { user } = useAuth();
+  const { user, saveProfile } = useAuth();
 
     if (!user) {
     return <RedirectToSignIn />
@@ -70,6 +71,9 @@ const Onboarding = () => {
     preferredSplit: "upper_lower",
   })
 
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState("");
+
 
   function updateForm(field: string, value: string){
 
@@ -81,6 +85,27 @@ const Onboarding = () => {
    async function handleQuestionnaire(e: React.SubmitEvent){
 
     e.preventDefault();
+
+    const profile: Omit<UserProfile, 'userId' | 'updatedAt'> = {
+      goal: formData.goal as UserProfile["goal"],
+      experience: formData.experience as UserProfile["experience"],
+      daysPerWeek: parseInt(formData.daysPerWeek),
+      sessionLength: parseInt(formData.sessionLength),
+      equipment: formData.equipment as UserProfile["equipment"],
+      injuries: formData.injuries || undefined,
+      preferredSplit: formData.preferredSplit as UserProfile["preferredSplit"],
+    }
+
+     try{
+      await saveProfile(profile);
+      setIsGenerating(true);
+     }
+     catch(err){
+      setError(err instanceof Error ? err.message : "Failed to save profile")
+     }
+     finally{
+      setIsGenerating(false);
+     }
   }
 
 
@@ -90,11 +115,13 @@ const Onboarding = () => {
       <div className="min-h-screen pt-24 pb-12 px-6">
         <div className="max-w-xl mx-auto">
           {/* Questionnaire */}
-          <Card variant="bordered">
+          {
+            !isGenerating ? (
+              <Card variant="bordered">
             <h1 className="text-2xl font-bold mb-2">
               Tell Us About Yourself
             </h1>
-            <p className="text-[var(--color-muted)] mb-6">
+            <p className="text-muted mb-6">
               Help us create the perfect plan for you.
             </p>
             <form onSubmit={handleQuestionnaire} className="space-y-5">
@@ -158,6 +185,20 @@ const Onboarding = () => {
                 </div>
             </form>
           </Card>
+            )
+            : (
+              <Card variant="bordered" className="text-center py-16">
+                <Loader2 className="w-12 h-12 text-[var(--color-accent)] mx-auto mb-6 animate-spin" />
+                <h1 className="text-2xl font-bold mb-2">
+                  Creating your plan
+                </h1>
+                <p className="text-[var(--color-muted)]">
+                  {" "}
+                  Our AI is building your personalized training program...
+                </p>
+              </Card>
+            )
+          }
         </div>
       </div>
     </SignedIn>
