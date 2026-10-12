@@ -19,9 +19,10 @@ app.use(cookieParser());
 app.use("/api/profile", profileRouter);
 app.use("/api/plan", planRouter);
 
-app.get("/", (req, res) => {
-    res.send("Backend is working");
-});
+
+// app.get("/", (req, res) => {
+//     res.send("Backend is working");
+// });
 
 
  app.listen(PORT, () => {
