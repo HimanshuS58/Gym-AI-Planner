@@ -71,7 +71,7 @@ planRouter.post("/generate", async (req: Request, res: Response) => {
 })
 
 
-planRouter.post("/current", async (req: Request, res: Response) => {
+planRouter.get("/current", async (req: Request, res: Response) => {
 
     try {
         const userId = req.query.userId as string;
