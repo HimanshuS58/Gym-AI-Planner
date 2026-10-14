@@ -31,5 +31,11 @@ export const api = {
         profileData: Omit<UserProfile, 'userId' | 'updatedAt'>
     ) => {
         return post("/profile", { userId, ...profileData })
+    },
+
+    generateUserPlan: (
+        userId: string
+    ) => {
+        return post("/plan/generate", { userId })
     }
 }

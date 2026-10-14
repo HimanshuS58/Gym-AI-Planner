@@ -7,6 +7,7 @@ import { Textarea } from "../components/ui/Textarea";
 import { Button } from "../components/ui/Button";
 import { ArrowRight, Loader2 } from "lucide-react";
 import type { UserProfile } from "../types";
+import { useNavigate } from "react-router-dom";
 
 
 const goalOptions = [
@@ -55,7 +56,7 @@ const splitOptions = [
 // main function
 const Onboarding = () => {
 
-  const { user, saveProfile } = useAuth();
+  const { user, saveProfile, generatePlan } = useAuth();
 
     if (!user) {
     return <RedirectToSignIn />
@@ -74,6 +75,7 @@ const Onboarding = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
 
   function updateForm(field: string, value: string){
 
@@ -99,6 +101,8 @@ const Onboarding = () => {
      try{
       await saveProfile(profile);
       setIsGenerating(true);
+      await generatePlan();
+      navigate("/profile")
      }
      catch(err){
       setError(err instanceof Error ? err.message : "Failed to save profile")

@@ -7,7 +7,8 @@ import { api } from "../lib/api";
 interface AuthContextType {
     user: User | null;
     isLoading: boolean;
-    saveProfile: (profile: Omit<UserProfile, 'userId' | 'updatedAt'>) => Promise<void>
+    saveProfile: (profile: Omit<UserProfile, 'userId' | 'updatedAt'>) => Promise<void>;
+    generatePlan: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -48,8 +49,16 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         await api.saveUserProfile(neonUser.id, profileData)
     }
 
+    async function generatePlan() {
+        if(!neonUser){
+            throw new Error("User must be authenticated to generate plan");
+        }
+        
+        await api.generateUserPlan(neonUser.id)
+    }
+
     return (
-        <AuthContext.Provider value={{user: neonUser, isLoading, saveProfile }}>
+        <AuthContext.Provider value={{user: neonUser, isLoading, saveProfile, generatePlan }}>
             {children}
         </AuthContext.Provider>
     )
