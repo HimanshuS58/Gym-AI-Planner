@@ -60,7 +60,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     }, [neonUser?.id, isLoading])
 
 
-    // RefreshData memoized function to fetch the latest training plan for the authenticated user.
+// RefreshData memoized function to fetch the latest training plan for the authenticated user.
     const refreshData = useCallback(async()=>{
 
         if(!neonUser || isRefreshingDataRef.current) return // If there's no authenticated user or a refresh is already in progress, exit early.
