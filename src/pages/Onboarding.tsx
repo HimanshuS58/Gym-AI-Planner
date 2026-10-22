@@ -128,6 +128,11 @@ const Onboarding = () => {
             <p className="text-muted mb-6">
               Help us create the perfect plan for you.
             </p>
+            {error && (
+              <p role="alert" className="mb-4 text-sm text-red-500">
+                {error}
+              </p>
+            )}
             <form onSubmit={handleQuestionnaire} className="space-y-5">
               <Select
                 id="goal"
